@@ -1,4 +1,5 @@
 using LojaSuplementos.Data;
+using LojaSuplementos.Services.Categoria;
 using LojaSuplementos.Services.Produto;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,8 @@ builder.Services.AddDbContext<DataContext>(options => {
 );
 
 builder.Services.AddScoped<IProdutoInterface, ProdutoService>();
+builder.Services.AddScoped<ICategoriaInterface, CategoriaService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
