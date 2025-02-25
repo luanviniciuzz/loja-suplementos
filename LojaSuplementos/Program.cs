@@ -1,4 +1,5 @@
 using LojaSuplementos.Data;
+using LojaSuplementos.Services.Produto;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,8 @@ builder.Services.AddDbContext<DataContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 }
 );
+
+builder.Services.AddScoped<IProdutoInterface, ProdutoService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
