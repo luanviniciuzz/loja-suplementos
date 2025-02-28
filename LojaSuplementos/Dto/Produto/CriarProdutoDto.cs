@@ -12,7 +12,7 @@ namespace LojaSuplementos.Dto.Produto
         [Required(ErrorMessage = "Digite a Marca!")]
         public string Marca { get; set; }
 
-        public string Foto { get; set; }
+        public string? Foto { get; set; }
 
         [Required(ErrorMessage = "Digite o Valor!")]
         public double Valor { get; set; }

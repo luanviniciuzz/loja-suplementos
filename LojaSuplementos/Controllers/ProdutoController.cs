@@ -39,7 +39,7 @@ namespace LojaSuplementos.Controllers
             }
             else
             {
-                ViewBag.Categoria = await _categoriaInterface.BuscarCategorias();
+                ViewBag.Categorias = await _categoriaInterface.BuscarCategorias();
                 return View(criarProdutoDto);
             }
         }

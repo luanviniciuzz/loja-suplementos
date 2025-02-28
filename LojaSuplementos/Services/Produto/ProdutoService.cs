@@ -57,7 +57,7 @@ namespace LojaSuplementos.Services.Produto
             var codigo = Guid.NewGuid().ToString();
             var nomeCaminhoImagem = foto.FileName.Replace(" ", "").ToLower() + codigo + ".png";
 
-            var caminhoParaSalvarImagens = _sistema + "\\imagem";
+            var caminhoParaSalvarImagens = _sistema + "\\imagem\\";
 
             if(!Directory.Exists(caminhoParaSalvarImagens))
             {
