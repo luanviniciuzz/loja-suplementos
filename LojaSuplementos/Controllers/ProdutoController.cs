@@ -29,6 +29,24 @@ namespace LojaSuplementos.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Editar(int id)
+        {
+            var produto = await _produtoInterface.BuscarProdutoPorId(id);
+
+            var editarProdutoDto = new EditarProdutoDto {
+                Nome = produto.Nome,
+                Marca = produto.Marca,
+                Valor = produto.Valor,
+                CategoriaModelId = produto.CategoriaModelId,
+                Foto = produto.Foto,
+                QuantidadeEstoque = produto.QuantidadeEstoque
+            };
+
+            ViewBag.Categorias = await _categoriaInterface.BuscarCategorias();
+
+            return View(editarProdutoDto);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Cadastrar(CriarProdutoDto criarProdutoDto, IFormFile foto)
         {

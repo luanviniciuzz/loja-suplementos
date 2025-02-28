@@ -8,5 +8,6 @@ namespace LojaSuplementos.Services.Produto
         //retorno nome parametros
         Task<List<ProdutoModel>> BuscarProdutos();
         Task<ProdutoModel> Cadastrar(CriarProdutoDto criarProdutoDto, IFormFile foto);
+        Task<ProdutoModel> BuscarProdutoPorId(int id);
     }
 }
