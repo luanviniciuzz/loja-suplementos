@@ -61,5 +61,19 @@ namespace LojaSuplementos.Controllers
                 return View(criarProdutoDto);
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> Editar(EditarProdutoDto editarProdutoDto, IFormFile? foto)
+        {
+            if(ModelState.IsValid)
+            {
+                var produto = await _produtoInterface.Editar(editarProdutoDto, foto);
+                return RedirectToAction("Index", "Produto");
+            }
+            else
+            {
+                ViewBag.Categorias = await _categoriaInterface.BuscarCategorias();
+                return View(editarProdutoDto);
+            }
+        }
     }
 }

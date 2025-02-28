@@ -67,6 +67,43 @@ namespace LojaSuplementos.Services.Produto
             }
         }
 
+        public async Task<ProdutoModel> Editar(EditarProdutoDto editarProdutoDto, IFormFile? foto)
+        {
+            try 
+            {
+                var produto = await BuscarProdutoPorId(editarProdutoDto.Id);
+                var nomeCaminhoImagem = "";
+                if(foto != null)
+                {
+                    string caminhoCapaExixtente = _sistema + "\\imagem\\" + produto.Foto;
+
+                    if (File.Exists(caminhoCapaExixtente)) {
+                        File.Delete(caminhoCapaExixtente);
+                    }
+                    nomeCaminhoImagem = GerarCaminhoArquivo(foto);
+                }
+
+                produto.Nome = editarProdutoDto.Nome;
+                produto.Marca = editarProdutoDto.Marca;
+                produto.Valor = editarProdutoDto.Valor;
+                produto.QuantidadeEstoque = editarProdutoDto.QuantidadeEstoque;
+                produto.CategoriaModelId = editarProdutoDto.CategoriaModelId;
+                
+                if(nomeCaminhoImagem != "") {
+                    produto.Foto = nomeCaminhoImagem;
+                }
+
+                _context.Update(produto);
+                await _context.SaveChangesAsync();
+
+                return produto;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         private string GerarCaminhoArquivo(IFormFile foto)
         {
             var codigo = Guid.NewGuid().ToString();
