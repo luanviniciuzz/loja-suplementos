@@ -1,4 +1,5 @@
-﻿using LojaSuplementos.Models;
+﻿using LojaSuplementos.Dto.Produto;
+using LojaSuplementos.Models;
 
 namespace LojaSuplementos.Services.Produto
 {
@@ -6,5 +7,6 @@ namespace LojaSuplementos.Services.Produto
     {
         //retorno nome parametros
         Task<List<ProdutoModel>> BuscarProdutos();
+        Task<ProdutoModel> Cadastrar(CriarProdutoDto criarProdutoDto, IFormFile foto);
     }
 }

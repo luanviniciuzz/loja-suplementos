@@ -1,15 +1,19 @@
 ﻿using LojaSuplementos.Data;
+using LojaSuplementos.Dto.Produto;
 using LojaSuplementos.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LojaSuplementos.Services.Produto
 {
     public class ProdutoService : IProdutoInterface
     {
         private readonly DataContext _context;
-        public ProdutoService(DataContext context)
+        private readonly string _sistema;
+        public ProdutoService(DataContext context, IWebHostEnvironment sistema)
         {
             _context = context;
+            _sistema = sistema.WebRootPath;
         }
         public async Task<List<ProdutoModel>> BuscarProdutos()
         {
@@ -21,6 +25,51 @@ namespace LojaSuplementos.Services.Produto
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<ProdutoModel> Cadastrar(CriarProdutoDto criarProdutoDto, IFormFile foto)
+        {
+            try
+            {
+                var caminhoImagem = GerarCaminhoArquivo(foto);
+                var produto = new ProdutoModel {
+                    Nome = criarProdutoDto.Nome,
+                    Marca = criarProdutoDto.Marca,
+                    Valor = criarProdutoDto.Valor,
+                    CategoriaModelId = criarProdutoDto.CategoriaModelId,
+                    Foto = caminhoImagem,
+                    QuantidadeEstoque = criarProdutoDto.QuantidadeEstoque
+                };
+
+                _context.Produtos.Add(produto);
+                await _context.SaveChangesAsync();
+
+                return produto;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private string GerarCaminhoArquivo(IFormFile foto)
+        {
+            var codigo = Guid.NewGuid().ToString();
+            var nomeCaminhoImagem = foto.FileName.Replace(" ", "").ToLower() + codigo + ".png";
+
+            var caminhoParaSalvarImagens = _sistema + "\\imagem";
+
+            if(!Directory.Exists(caminhoParaSalvarImagens))
+            {
+                Directory.CreateDirectory(caminhoParaSalvarImagens);
+            }
+
+            using (var stream = File.Create(caminhoParaSalvarImagens + nomeCaminhoImagem))
+            {
+                foto.CopyToAsync(stream).Wait();
+            }
+
+            return nomeCaminhoImagem;
         }
     }
 }
