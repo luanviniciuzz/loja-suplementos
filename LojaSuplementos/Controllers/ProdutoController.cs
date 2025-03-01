@@ -28,6 +28,11 @@ namespace LojaSuplementos.Controllers
 
             return View();
         }
+        public async Task<IActionResult> Remover(int id)
+        {
+            var produto  = await _produtoInterface.Remover(id);
+            return RedirectToAction("Index", "Produto");
+        }
 
         public async Task<IActionResult> Editar(int id)
         {
@@ -53,11 +58,13 @@ namespace LojaSuplementos.Controllers
             if(ModelState.IsValid)
             {
                 var produto = await _produtoInterface.Cadastrar(criarProdutoDto, foto);
+                TempData["MensagemSucesso"] = "Produto cadastrado com sucesso!";
                 return RedirectToAction("Index", "Produto");
             }
             else
             {
                 ViewBag.Categorias = await _categoriaInterface.BuscarCategorias();
+                TempData["MensagemErro"] = "Ocorreu algum erro no processo!";
                 return View(criarProdutoDto);
             }
         }

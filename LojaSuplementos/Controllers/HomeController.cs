@@ -1,3 +1,5 @@
+using LojaSuplementos.Models;
+using LojaSuplementos.Services.Produto;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -5,10 +7,25 @@ namespace LojaSuplementos.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IProdutoInterface _produtoInterface;
 
-        public IActionResult Index()
+        public HomeController(IProdutoInterface produtoInterface)
         {
-            return View();
+            _produtoInterface = produtoInterface;
+        }
+
+        public async Task<IActionResult> Index(string? pesquisar)
+        {
+            List<ProdutoModel> produtos = new List<ProdutoModel>();
+
+            if (pesquisar == null) {
+                produtos = await _produtoInterface.BuscarProdutos();
+            } else {
+                produtos = await _produtoInterface.BuscarProdutoFiltro(pesquisar);
+            }
+
+
+            return View(produtos);
         }
 
      

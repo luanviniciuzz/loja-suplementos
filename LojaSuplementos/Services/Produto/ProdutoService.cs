@@ -16,6 +16,22 @@ namespace LojaSuplementos.Services.Produto
             _sistema = sistema.WebRootPath;
         }
 
+        public async Task<List<ProdutoModel>> BuscarProdutoFiltro(string? pesquisar)
+        {
+            try {
+
+                var produtos = await _context.Produtos.Include(x => x.Categoria)
+                                    .Where(p => p.Nome.Contains(pesquisar) || p.Marca.Contains(pesquisar))
+                                    .ToListAsync();
+
+                return produtos;
+
+
+            } catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<ProdutoModel> BuscarProdutoPorId(int id)
         {
             try
@@ -100,6 +116,23 @@ namespace LojaSuplementos.Services.Produto
             }
             catch (Exception ex)
             {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ProdutoModel> Remover(int id)
+        {
+            try
+            {
+               var produto = await BuscarProdutoPorId(id);
+               
+               _context.Remove(produto);
+                await _context.SaveChangesAsync();
+
+                return produto; 
+
+               
+            } catch (Exception ex) {
                 throw new Exception(ex.Message);
             }
         }
