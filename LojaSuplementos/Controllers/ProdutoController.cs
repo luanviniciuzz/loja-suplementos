@@ -33,7 +33,11 @@ namespace LojaSuplementos.Controllers
             var produto  = await _produtoInterface.Remover(id);
             return RedirectToAction("Index", "Produto");
         }
-
+        public async Task<IActionResult> Detalhes(int id)
+        {
+            var produto = await _produtoInterface.BuscarProdutoPorId(id);
+            return View(produto);
+        }
         public async Task<IActionResult> Editar(int id)
         {
             var produto = await _produtoInterface.BuscarProdutoPorId(id);
