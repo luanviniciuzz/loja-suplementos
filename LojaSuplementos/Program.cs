@@ -2,6 +2,7 @@ using LojaSuplementos.Data;
 using LojaSuplementos.Services.Categoria;
 using LojaSuplementos.Services.Estoque;
 using LojaSuplementos.Services.Produto;
+using LojaSuplementos.Services.Usuario;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<DataContext>(options => {
 builder.Services.AddScoped<IProdutoInterface, ProdutoService>();
 builder.Services.AddScoped<ICategoriaInterface, CategoriaService>();
 builder.Services.AddScoped<IEstoqueInterface, EstoqueService>();
+builder.Services.AddScoped<IUsuarioInterface, UsuarioService>();
 
 var app = builder.Build();
 
