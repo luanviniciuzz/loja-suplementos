@@ -1,4 +1,5 @@
 using LojaSuplementos.Data;
+using LojaSuplementos.Services.Autenticacao;
 using LojaSuplementos.Services.Categoria;
 using LojaSuplementos.Services.Estoque;
 using LojaSuplementos.Services.Produto;
@@ -19,6 +20,7 @@ builder.Services.AddScoped<IProdutoInterface, ProdutoService>();
 builder.Services.AddScoped<ICategoriaInterface, CategoriaService>();
 builder.Services.AddScoped<IEstoqueInterface, EstoqueService>();
 builder.Services.AddScoped<IUsuarioInterface, UsuarioService>();
+builder.Services.AddScoped<IAutenticacaoInterface, AutenticacaoService>();
 
 var app = builder.Build();
 
