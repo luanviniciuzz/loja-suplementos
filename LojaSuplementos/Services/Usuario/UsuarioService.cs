@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using LojaSuplementos.Data;
+using LojaSuplementos.Dto.Login;
 using LojaSuplementos.Dto.Usuario;
 using LojaSuplementos.Models;
 using LojaSuplementos.Services.Autenticacao;
+using LojaSuplementos.Services.Sessao;
 using Microsoft.EntityFrameworkCore;
 
 namespace LojaSuplementos.Services.Usuario
@@ -12,12 +14,14 @@ namespace LojaSuplementos.Services.Usuario
         private readonly DataContext _context;
         private readonly IAutenticacaoInterface _autenticacaoInterface;
         private readonly IMapper _mapper;
+        private readonly ISessaoInterface _sessaoInterface;
 
-        public UsuarioService(DataContext context, IAutenticacaoInterface autenticacaoInterface, IMapper mapper)
+        public UsuarioService(DataContext context, IAutenticacaoInterface autenticacaoInterface, IMapper mapper, ISessaoInterface sessaoInterface)
         {
             _context = context;
             _autenticacaoInterface = autenticacaoInterface;
             _mapper = mapper;
+            _sessaoInterface = sessaoInterface;
         }
 
         public async Task<UsuarioModel> BuscarUsuarioPorId(int id)
@@ -93,6 +97,28 @@ namespace LojaSuplementos.Services.Usuario
 
                 _context.Update(usuarioBanco);
                 await _context.SaveChangesAsync();
+
+                return usuarioBanco;
+
+            } catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<UsuarioModel> Login(LoginUsuarioDto loginUsuarioDto)
+        {
+            try {
+
+                var usuarioBanco = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == loginUsuarioDto.Email);
+
+                if (usuarioBanco == null) {
+                    return null;
+                }
+
+                if (!_autenticacaoInterface.VerificaLogin(loginUsuarioDto.Senha, usuarioBanco.SenhaHash, usuarioBanco.SenhaSalt)) {
+                    return null;
+                }
+
+                _sessaoInterface.CriarSessao(usuarioBanco);
 
                 return usuarioBanco;
 

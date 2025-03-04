@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LojaProdutosCurso.Filtros;
 using LojaSuplementos.Dto.Endereco;
 using LojaSuplementos.Dto.Usuario;
 using LojaSuplementos.Services.Usuario;
@@ -6,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LojaSuplementos.Controllers
 {
+    [UsuarioLogado]
+    [UsuarioLogadoAdm]
     public class UsuarioController : Controller
     {
         private readonly IUsuarioInterface _usuarioInterface;

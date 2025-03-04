@@ -1,4 +1,5 @@
-﻿using LojaSuplementos.Dto.Usuario;
+﻿using LojaSuplementos.Dto.Login;
+using LojaSuplementos.Dto.Usuario;
 using LojaSuplementos.Models;
 
 namespace LojaSuplementos.Services.Usuario
@@ -11,5 +12,7 @@ namespace LojaSuplementos.Services.Usuario
         Task<CriarUsuarioDto> Cadastrar(CriarUsuarioDto criarUsuarioDto);
 
         Task<UsuarioModel> Editar(EditarUsuarioDto editarUsuarioDto);
+
+        Task<UsuarioModel> Login(LoginUsuarioDto loginUsuarioDto);
     }
 }
