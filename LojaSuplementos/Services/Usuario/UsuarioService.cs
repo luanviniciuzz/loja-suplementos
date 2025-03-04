@@ -1,6 +1,8 @@
-﻿using LojaSuplementos.Data;
+﻿using AutoMapper;
+using LojaSuplementos.Data;
 using LojaSuplementos.Dto.Usuario;
 using LojaSuplementos.Models;
+using LojaSuplementos.Services.Autenticacao;
 using Microsoft.EntityFrameworkCore;
 
 namespace LojaSuplementos.Services.Usuario
@@ -8,11 +10,14 @@ namespace LojaSuplementos.Services.Usuario
     public class UsuarioService : IUsuarioInterface
     {
         private readonly DataContext _context;
-    
+        private readonly IAutenticacaoInterface _autenticacaoInterface;
+        private readonly IMapper _mapper;
 
-        public UsuarioService(DataContext context)
+        public UsuarioService(DataContext context, IAutenticacaoInterface autenticacaoInterface, IMapper mapper)
         {
             _context = context;
+            _autenticacaoInterface = autenticacaoInterface;
+            _mapper = mapper;
         }
 
         public async Task<UsuarioModel> BuscarUsuarioPorId(int id)
@@ -36,12 +41,66 @@ namespace LojaSuplementos.Services.Usuario
             }
         }
 
-        public Task<CriarUsuarioDto> Cadastrar(CriarUsuarioDto criarUsuarioDto)
+        public async Task<CriarUsuarioDto> Cadastrar(CriarUsuarioDto criarUsuarioDto)
         {
-            throw new NotImplementedException();
-        }
+            try {
+                //servico que cria a senhaHash e senhaSalt
+                _autenticacaoInterface.CriarSenhaHash(criarUsuarioDto.Senha, out byte[] senhaHash, out byte[] senhaSalt);
 
-        public Task<bool> VerificaSeExisteEmail(CriarUsuarioDto criarUsuarioDto)
+                var usuario = new UsuarioModel {
+                    Nome = criarUsuarioDto.Nome,
+                    Email = criarUsuarioDto.Email,
+                    Cargo = criarUsuarioDto.Cargo,
+                    SenhaHash = senhaHash,
+                    SenhaSalt = senhaSalt
+                };
+
+                var endereco = new EnderecoModel {
+
+                    Logradouro = criarUsuarioDto.Logradouro,
+                    Numero = criarUsuarioDto.Numero,
+                    Bairro = criarUsuarioDto.Bairro,
+                    Estado = criarUsuarioDto.Estado,
+                    Complemento = criarUsuarioDto.Complemento,
+                    CEP = criarUsuarioDto.CEP,
+                    Usuario = usuario
+
+                };
+
+
+                usuario.Endereco = endereco;
+
+                _context.Add(usuario);
+                await _context.SaveChangesAsync();
+
+                return criarUsuarioDto;
+
+
+            } catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<UsuarioModel> Editar(EditarUsuarioDto editarUsuarioDto)
+        {
+            try {
+                var usuarioBanco = await _context.Usuarios.Include(e => e.Endereco).FirstOrDefaultAsync(x => x.Id == editarUsuarioDto.Id);
+
+                usuarioBanco.Nome = editarUsuarioDto.Nome;
+                usuarioBanco.Cargo = editarUsuarioDto.Cargo;
+                usuarioBanco.Email = editarUsuarioDto.Email;
+                usuarioBanco.DataAlteracao = DateTime.Now;
+                usuarioBanco.Endereco = _mapper.Map<EnderecoModel>(editarUsuarioDto.Endereco);
+
+                _context.Update(usuarioBanco);
+                await _context.SaveChangesAsync();
+
+                return usuarioBanco;
+
+            } catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<bool> VerificaSeExisteEmail(CriarUsuarioDto criarUsuarioDto)
         {
             try {
 

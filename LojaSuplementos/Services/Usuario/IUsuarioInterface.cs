@@ -9,5 +9,7 @@ namespace LojaSuplementos.Services.Usuario
         Task<UsuarioModel> BuscarUsuarioPorId(int id);
         Task<bool> VerificaSeExisteEmail(CriarUsuarioDto criarUsuarioDto);
         Task<CriarUsuarioDto> Cadastrar(CriarUsuarioDto criarUsuarioDto);
+
+        Task<UsuarioModel> Editar(EditarUsuarioDto editarUsuarioDto);
     }
 }

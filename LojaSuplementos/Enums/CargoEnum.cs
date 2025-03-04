@@ -2,7 +2,7 @@
 {
     public enum CargoEnum
     {
-        Administrador = 0,
+        Administrador = 1,
         Cliente = 0
     }
 }
