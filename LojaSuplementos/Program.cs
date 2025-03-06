@@ -6,11 +6,13 @@ using LojaSuplementos.Services.Estoque;
 using LojaSuplementos.Services.Produto;
 using LojaSuplementos.Services.Sessao;
 using LojaSuplementos.Services.Usuario;
+using LojaSuplementos.Utils.EncontrarVogal;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Services.AddDbContext<DataContext>(options => {
@@ -33,13 +35,26 @@ builder.Services.AddSession(options => {
     options.Cookie.IsEssential = true;
 });
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.MapPost("/api", (string input) => {
+
+    ConsultarString consultarString = new ConsultarString();
+    var result = consultarString.EncontrarVogal(input);
+
+    return Results.Ok(JsonSerializer.Deserialize<object>(result));
+}).WithSummary("Encontra a primeira vogal ")
+.WithDescription("Encontra o primeiro caractere Vogal, após uma consoante, onde a mesma é antecessora a uma vogal e que não se repita na string."); ;
+
+
 if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
