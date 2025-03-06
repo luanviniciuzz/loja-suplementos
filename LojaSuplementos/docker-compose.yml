@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  loja_suplementos:
+    container_name: loja_suplementos
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: loja_suplementos
+    ports:
+      - "8075:8080"
