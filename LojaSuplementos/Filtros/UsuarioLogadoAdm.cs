@@ -27,10 +27,6 @@ namespace LojaProdutosCurso.Filtros
                 UsuarioModel usuarioModel = JsonConvert.DeserializeObject<UsuarioModel>(sessao);
 
 
-
-
-
-
                 if (usuarioModel.Cargo == CargoEnum.Cliente) {
                     context.Result = new RedirectToRouteResult(new RouteValueDictionary
                         {
