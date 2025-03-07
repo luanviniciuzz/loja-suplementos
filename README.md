@@ -77,4 +77,6 @@ e foi criado um banco de dados na AWS para se conectar a aplicação
 
 <p>API: https://loja-suplementos-1rml.onrender.com/swagger/index.html</p>
 <p>Sistema web: https://loja-suplementos-1rml.onrender.com</p>
+<p>Acesso como administrador:</p>
+email: admin@email.com | senha: 1234
 
